@@ -14,14 +14,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 function test_vc_map_dependencies() {
-	if ( ! class_exists( 'Vc_Manager' ) ) {
-		echo '<div class="error"><p>' . __( 'Warning: You need to enable plugin "Visual Composer" to run setup!', 'test_vc_map' ) . '</p></div>';
+	if ( ! defined( 'WPB_VC_VERSION' ) ) {
+		$plugin_data = get_plugin_data(__FILE__);
+        echo '
+        <div class="updated">
+          <p>'.sprintf(__('<strong>%s</strong> requires <strong><a href="http://bit.ly/vcomposer" target="_blank">Visual Composer</a></strong> plugin to be installed and activated on your site.', 'vc_extend'), $plugin_data['Name']).'</p>
+        </div>';
 	}
 }
-
+add_action( 'admin_notices', 'test_vc_map_dependencies' );
 
 function text_vc_map_init() {
-	add_action( 'admin_notices', 'test_vc_map_dependencies' );
 	// Note that all keys=values in mapped shortcode can be used with javascript variable vc.map, and php shortcode settings variable.
 	$settings = array(
 		'name'                    => __( 'Test element', 'js_composer' ),
@@ -125,5 +128,5 @@ function text_vc_map_init() {
 }
 
 
-add_action('init', 'text_vc_map_init');
+add_action('vc_after_init', 'text_vc_map_init');
 
